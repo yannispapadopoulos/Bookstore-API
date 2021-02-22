@@ -10,7 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="publisher")
+@Table(name = "publisher")
 public class Publisher {
     @Id
     @GeneratedValue

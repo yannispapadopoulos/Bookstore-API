@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="author")
+@Table(name = "author")
 public class Author {
     @Id
     @GeneratedValue

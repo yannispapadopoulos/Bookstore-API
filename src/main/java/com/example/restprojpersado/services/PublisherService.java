@@ -1,14 +1,17 @@
 package com.example.restprojpersado.services;
 
 import com.example.restprojpersado.entities.Publisher;
-import com.example.restprojpersado.repositories.PublisherRepository;
+import com.example.restprojpersado.DAO.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PublisherService {
     @Autowired
     private PublisherRepository publisherRepository;
 
-    public Publisher savePublisher(Publisher publisher){
+
+    public Publisher savePublisher(Publisher publisher) {
 
         return publisherRepository.save(publisher);
     }

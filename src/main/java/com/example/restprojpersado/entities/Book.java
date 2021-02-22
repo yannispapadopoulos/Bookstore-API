@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="book")
+@Table(name = "book")
 public class Book {
     @Id
     @GeneratedValue
@@ -26,17 +26,18 @@ public class Book {
     @Column(name = "descr")
     private String descr;
 
+
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="author_id",referencedColumnName = "id")
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
     private Author author;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="publisher_id",referencedColumnName = "id")
+    @JoinColumn(name = "publisher_id", referencedColumnName = "id")
     private Publisher publisher;
 
-    @Column(name = "visible")
+    @Column(name = "visible", columnDefinition = "BIT")
     private Integer visible;
 
     @Column(name = "date_creation")
