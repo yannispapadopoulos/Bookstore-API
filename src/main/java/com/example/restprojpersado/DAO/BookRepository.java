@@ -16,7 +16,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     //List<VisibleBooksOrderedByAuthorDto> orderPublishedBooksByAuthorQry();
 
 
-    @Query(value = "select title as title ,description as description ,ISBN as ISBN , fullname as fullname, numericvalue as numericvalue " +
+    @Query(value = "select title as title ,CASE WHEN LENGTH(description)>100 THEN CONCAT(SUBSTRING(description,1,100),'...') ELSE description END" +
+            " as description ,ISBN as ISBN , fullname as fullname, numericvalue as numericvalue " +
             " from (select CONCAT(a.firstname,a.lastname) as fullname, a.lastname as lastname,b.isbn as ISBN, b.title as title," +
             " b.descr as description ,row_number() over (partition by a.lastname order by a.lastname ) as numericvalue from  book b ,author a  where " +
             "b.author_id=a.id and a.id is not null and b.visible=1) b order by b.lastname, b.numericvalue desc", nativeQuery = true)

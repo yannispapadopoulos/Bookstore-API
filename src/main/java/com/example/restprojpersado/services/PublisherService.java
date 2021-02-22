@@ -1,5 +1,6 @@
 package com.example.restprojpersado.services;
 
+import com.example.restprojpersado.entities.Book;
 import com.example.restprojpersado.entities.Publisher;
 import com.example.restprojpersado.DAO.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,4 +17,7 @@ public class PublisherService {
         return publisherRepository.save(publisher);
     }
 
+    public Publisher getPublisher(Integer publisherId) {
+        return publisherRepository.findById(publisherId).orElse(null);
+    }
 }

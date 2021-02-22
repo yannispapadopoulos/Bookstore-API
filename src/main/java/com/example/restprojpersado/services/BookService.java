@@ -1,8 +1,12 @@
 package com.example.restprojpersado.services;
 
+import com.example.restprojpersado.DTO.BookDetails;
 import com.example.restprojpersado.DTO.BookInfoDto;
 import com.example.restprojpersado.DTO.VisibleBooksOrderedByAuthorDto;
+import com.example.restprojpersado.entities.Author;
 import com.example.restprojpersado.entities.Book;
+import com.example.restprojpersado.entities.Publisher;
+import org.hibernate.query.criteria.internal.expression.function.SubstringFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.restprojpersado.DAO.BookRepository;
@@ -12,14 +16,31 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
+import static jdk.nashorn.internal.objects.NativeString.substring;
+
 @Service
 public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    public Book saveBookDetails(BookDetails bookDetails, Publisher publisher, Author author){
+        Book book=new Book();
+        book.setPublisher(publisher);
+        book.setAuthor(author);
+        book.setIsbn(bookDetails.getIsbn());
+        book.setDate_creation(bookDetails.getDate_creation());
+        book.setTitle(bookDetails.getTitle());
+        book.setDescr(bookDetails.getDescr());
+        book.setVisible(bookDetails.getVisible());
+
+        return bookRepository.save(book);
+
+    }
+
 
     public List<VisibleBooksOrderedByAuthorDto> getOrderPublishedBooksByAuthor() {
-        return bookRepository.orderPublishedBooksByAuthorQry();
+
+        return  bookRepository.orderPublishedBooksByAuthorQry();
 
     }
 

@@ -18,13 +18,26 @@ public class PublisherController {
 
     @PostMapping("/addPublisher")
     public Publisher addPublisher(@RequestBody Publisher publisher) {
+        try {
+            if (publisher.getName() == null) {
+                throw new ApiRequestException("publisher's firstname cannot be null");
+            }
 
-
-        if (publisher.getName() == null) {
-            throw new ApiRequestException("publisher's firstname cannot be null");
+            return publisherService.savePublisher(publisher);
+        } catch (Exception e) {
+            throw new ApiRequestException(e.getMessage());
         }
 
-        return publisherService.savePublisher(publisher);
+    }
+
+
+    @GetMapping("/findPublisher/{id}")
+    public Publisher findPublisher(@PathVariable Integer publisherId) {
+        try {
+            return publisherService.getPublisher(publisherId);
+        } catch (Exception e) {
+            throw new ApiRequestException(e.getMessage());
+        }
     }
 
 

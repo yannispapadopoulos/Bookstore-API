@@ -1,9 +1,14 @@
 package com.example.restprojpersado.REST;
 
+import com.example.restprojpersado.DTO.BookDetails;
 import com.example.restprojpersado.DTO.BookInfoDto;
 import com.example.restprojpersado.DTO.VisibleBooksOrderedByAuthorDto;
+import com.example.restprojpersado.entities.Author;
 import com.example.restprojpersado.entities.Book;
+import com.example.restprojpersado.entities.Publisher;
 import com.example.restprojpersado.exception.ApiRequestException;
+import com.example.restprojpersado.services.AuthorService;
+import com.example.restprojpersado.services.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,58 +27,98 @@ public class BookController {
 
     @Autowired
     private BookService bookService;
+    private PublisherService publisherService;
+    private AuthorService authorService;
 
     @GetMapping("/findOrderPublishedBooksByAuthor")
     public List<VisibleBooksOrderedByAuthorDto> findOrderPublishedBooksByAuthor() {
-        List<VisibleBooksOrderedByAuthorDto> listVisibleBooksOrderedByAuthorDto = bookService.getOrderPublishedBooksByAuthor();
-        if (listVisibleBooksOrderedByAuthorDto == null) {
-            throw new ApiRequestException("visible books with publisher not found");
+        try {
+            List<VisibleBooksOrderedByAuthorDto> listVisibleBooksOrderedByAuthorDto = bookService.getOrderPublishedBooksByAuthor();
+            if (listVisibleBooksOrderedByAuthorDto == null) {
+                throw new ApiRequestException("visible books with publisher not found");
+            }
+            return bookService.getOrderPublishedBooksByAuthor();
+        } catch (Exception e) {
+            throw new ApiRequestException(e.getMessage());
         }
-        return bookService.getOrderPublishedBooksByAuthor();
     }
 
     @GetMapping("/singleBookInfo")
     public ResponseEntity<BookInfoDto> singleBookInfo() {
-        BookInfoDto existBook = bookService.displaySingleBookInfo();
-        if (existBook == null) {
-            throw new ApiRequestException("book record not found. Database has no records");
+
+        try {
+            BookInfoDto existBook = null;
+            existBook = bookService.displaySingleBookInfo();
+            if (existBook == null) {
+                throw new ApiRequestException("book record not found. Database has no records");
+            }
+            return new ResponseEntity<BookInfoDto>(existBook, HttpStatus.OK);
+
+        } catch (Exception e) {
+            throw new ApiRequestException(e.getMessage());
         }
-        return new ResponseEntity<BookInfoDto>(existBook, HttpStatus.OK);
+
+
     }
 
-    @PostMapping("/addBook")
+    @PostMapping("/addBookStrict")
+    public ResponseEntity<Book> addBook(@RequestBody BookDetails bookDetails) {
 
+        try {
+            Book bookRes;
+            if (bookDetails == null) {
+                throw new ApiRequestException("json Object is null");
+            }
+            if (bookDetails.getTitle() == null) {
+                throw new ApiRequestException("title cannot be null");
+            }
+
+            if (bookDetails.getAuthorId() == null) {
+                throw new ApiRequestException("author Id cannot be null");
+            }
+
+            Author author = authorService.getAuthor(bookDetails.getAuthorId());
+            if (author == null) {
+                throw new ApiRequestException("author does not exist.Insert author first");
+            }
+            if (bookDetails.getPublisherId() == null) {
+                throw new ApiRequestException("publisher Id cannot be null");
+            }
+            Publisher publisher = publisherService.getPublisher(bookDetails.getPublisherId());
+            if (publisher == null) {
+                throw new ApiRequestException("publisher does not exist.Insert publisher first");
+            }
+
+            bookRes = bookService.saveBookDetails(bookDetails, publisher, author);
+            return new ResponseEntity<Book>(bookRes, HttpStatus.OK);
+
+        } catch (Exception e) {
+            throw new ApiRequestException(e.getMessage());
+        }
+
+    }
+
+
+    @PostMapping("/addBookFree")
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
 
+        try {
+            Book bookRes;
+            if (book == null) {
+                throw new ApiRequestException("json Object is null");
+            }
 
-        if (book.getTitle() == null) {
-            throw new ApiRequestException("title cannot be null");
+            if (book.getTitle() == null) {
+                throw new ApiRequestException("title cannot be null");
+            }
+
+            bookRes = bookService.saveBook(book);
+            return new ResponseEntity<Book>(bookRes, HttpStatus.OK);
+
+        } catch (Exception e) {
+            throw new ApiRequestException(e.getMessage());
         }
 
-        bookService.saveBook(book);
-
-        return new ResponseEntity<Book>(book, HttpStatus.OK);
-
-    }
-
-    @PostMapping("/addBookWithAuthPubl")
-    public ResponseEntity<Book> addBookWithAuthPubl(@RequestBody Book book) {
-
-
-        if (book.getTitle() == null) {
-            throw new ApiRequestException("title cannot be null");
-        }
-
-        if (book.getAuthor() == null) {
-            throw new ApiRequestException("author cannot be null");
-        }
-        if (book.getPublisher() == null) {
-            throw new ApiRequestException("publisher cannot be null");
-        }
-
-        bookService.saveBook(book);
-
-        return new ResponseEntity<Book>(book, HttpStatus.OK);
 
     }
 
@@ -81,38 +126,49 @@ public class BookController {
     @PostMapping("/updateBook")
     public ResponseEntity<Book> updateBook(@RequestBody Book book) {
 
+        try {
+            Book bookRes;
+            if (book == null) {
+                throw new ApiRequestException("json Object is null");
+            }
 
-        if (book == null) {
-            throw new ApiRequestException("json Object is null");
+            if (book.getIsbn() == null) {
+                throw new ApiRequestException("isbn is null");
+
+            }
+            Book existBook = bookService.getBook(book.getIsbn());
+
+            if (existBook == null) {
+                throw new ApiRequestException("book with isbn :" + book.getIsbn() + " does not exist");
+            }
+            bookRes = bookService.updateBook(book);
+            return new ResponseEntity<Book>(bookRes, HttpStatus.OK);
+
+        } catch (Exception e) {
+            throw new ApiRequestException(e.getMessage());
         }
-
-        if (book.getIsbn() == null) {
-            throw new ApiRequestException("isbn is null");
-
-        }
-        Book existBook = bookService.getBook(book.getIsbn());
-
-        if (existBook == null) {
-            throw new ApiRequestException("book with isbn :" + book.getIsbn() + " does not exist");
-        }
-        bookService.updateBook(book);
-        return new ResponseEntity<Book>(book, HttpStatus.OK);
-
     }
 
 
     @PostMapping("/deleteBook/{isbn}")
     public String deleteBook(@PathVariable Integer isbn) {
-        if (isbn == null) {
-            throw new ApiRequestException("variable isbn missing from path");
+
+        try {
+            if (isbn == null) {
+                throw new ApiRequestException("variable isbn missing from path");
+            }
+
+            Book existBook = bookService.getBook(isbn);
+            if (existBook == null) {
+                throw new ApiRequestException("book with isbn :" + isbn + " does not exist");
+
+            }
+            return bookService.deleteBook(isbn);
+
+        } catch (Exception e) {
+            throw new ApiRequestException(e.getMessage());
         }
 
-        Book existBook = bookService.getBook(isbn);
-        if (existBook == null) {
-            throw new ApiRequestException("book with isbn :" + isbn + " does not exist");
-
-        }
-        return bookService.deleteBook(isbn);
     }
 
 /////////////////////////////////////////////extra functions in case of need//////////////////////////////////////////////////////////

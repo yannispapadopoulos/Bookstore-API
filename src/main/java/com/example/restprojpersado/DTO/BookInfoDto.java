@@ -13,12 +13,21 @@ import java.util.Date;
 public class BookInfoDto {
 
     private String title;
+
     private String description;
+
     private Integer ISBN;
+
     private Date bookDate;
+
     private String authorFullname;
+
     private String authorEmail;
+
     private Date authorBirtDate;
+
     private String publisherName;
+
     private String publisherAddress;
+
 }
