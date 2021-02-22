@@ -27,7 +27,9 @@ public class BookController {
 
     @Autowired
     private BookService bookService;
+    @Autowired
     private PublisherService publisherService;
+    @Autowired
     private AuthorService authorService;
 
     @GetMapping("/findOrderPublishedBooksByAuthor")
@@ -38,6 +40,7 @@ public class BookController {
                 throw new ApiRequestException("visible books with publisher not found");
             }
             return bookService.getOrderPublishedBooksByAuthor();
+
         } catch (Exception e) {
             throw new ApiRequestException(e.getMessage());
         }
@@ -62,7 +65,7 @@ public class BookController {
     }
 
     @PostMapping("/addBookStrict")
-    public ResponseEntity<Book> addBook(@RequestBody BookDetails bookDetails) {
+    public ResponseEntity<Book> addBookStrict(@RequestBody BookDetails bookDetails) {
 
         try {
             Book bookRes;
@@ -99,8 +102,8 @@ public class BookController {
     }
 
 
-    @PostMapping("/addBookFree")
-    public ResponseEntity<Book> addBook(@RequestBody Book book) {
+    @PostMapping("/addBookOptional")
+    public ResponseEntity<Book> addBookOptional(@RequestBody Book book) {
 
         try {
             Book bookRes;
@@ -108,6 +111,9 @@ public class BookController {
                 throw new ApiRequestException("json Object is null");
             }
 
+            if (book.getIsbn() == null) {
+                throw new ApiRequestException("isbn cannot be null");
+            }
             if (book.getTitle() == null) {
                 throw new ApiRequestException("title cannot be null");
             }

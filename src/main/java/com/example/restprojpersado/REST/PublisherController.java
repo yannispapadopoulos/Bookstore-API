@@ -22,8 +22,8 @@ public class PublisherController {
             if (publisher.getName() == null) {
                 throw new ApiRequestException("publisher's firstname cannot be null");
             }
-
             return publisherService.savePublisher(publisher);
+
         } catch (Exception e) {
             throw new ApiRequestException(e.getMessage());
         }
@@ -35,6 +35,7 @@ public class PublisherController {
     public Publisher findPublisher(@PathVariable Integer publisherId) {
         try {
             return publisherService.getPublisher(publisherId);
+
         } catch (Exception e) {
             throw new ApiRequestException(e.getMessage());
         }

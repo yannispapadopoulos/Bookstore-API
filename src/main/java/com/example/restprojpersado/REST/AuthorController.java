@@ -24,18 +24,18 @@ public class AuthorController {
                 throw new ApiRequestException("author's lastname cannot be null");
             }
             return authorService.saveAuthor(author);
+
         } catch (Exception e) {
             throw new ApiRequestException(e.getMessage());
         }
 
-
     }
-
 
     @GetMapping("/findPAuthor/{id}")
     public Author findPAuthor(@PathVariable Integer authorId) {
         try {
             return authorService.getAuthor(authorId);
+
         } catch (Exception e) {
             throw new ApiRequestException(e.getMessage());
         }

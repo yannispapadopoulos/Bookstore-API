@@ -16,7 +16,6 @@ import java.util.Date;
 @Table(name = "book")
 public class Book {
     @Id
-    @GeneratedValue
     @Column(name = "isbn")
     private Integer isbn;
 
