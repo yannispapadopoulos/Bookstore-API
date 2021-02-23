@@ -1,12 +1,9 @@
 package com.example.restprojpersado.REST;
 
-import com.example.restprojpersado.entities.Book;
 import com.example.restprojpersado.entities.Publisher;
 import com.example.restprojpersado.exception.ApiRequestException;
 import com.example.restprojpersado.services.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,7 +27,6 @@ public class PublisherController {
 
     }
 
-
     @GetMapping("/findPublisher/{id}")
     public Publisher findPublisher(@PathVariable Integer publisherId) {
         try {
@@ -40,6 +36,5 @@ public class PublisherController {
             throw new ApiRequestException(e.getMessage());
         }
     }
-
 
 }

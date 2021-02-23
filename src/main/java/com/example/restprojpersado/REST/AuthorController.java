@@ -1,7 +1,6 @@
 package com.example.restprojpersado.REST;
 
 import com.example.restprojpersado.entities.Author;
-import com.example.restprojpersado.entities.Publisher;
 import com.example.restprojpersado.exception.ApiRequestException;
 import com.example.restprojpersado.services.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;

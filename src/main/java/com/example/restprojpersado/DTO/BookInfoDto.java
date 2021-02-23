@@ -24,7 +24,7 @@ public class BookInfoDto {
 
     private String authorEmail;
 
-    private Date authorBirtDate;
+    private Date authorBirthDate;
 
     private String publisherName;
 

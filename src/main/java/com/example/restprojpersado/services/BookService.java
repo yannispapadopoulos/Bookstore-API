@@ -6,7 +6,6 @@ import com.example.restprojpersado.DTO.VisibleBooksOrderedByAuthorDto;
 import com.example.restprojpersado.entities.Author;
 import com.example.restprojpersado.entities.Book;
 import com.example.restprojpersado.entities.Publisher;
-import org.hibernate.query.criteria.internal.expression.function.SubstringFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.restprojpersado.DAO.BookRepository;
@@ -16,7 +15,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-import static jdk.nashorn.internal.objects.NativeString.substring;
 
 @Service
 public class BookService {
@@ -36,31 +34,25 @@ public class BookService {
         return bookRepository.save(book);
 
     }
-
-
     public List<VisibleBooksOrderedByAuthorDto> getOrderPublishedBooksByAuthor() {
 
         return  bookRepository.orderPublishedBooksByAuthorQry();
 
     }
-
     public BookInfoDto displaySingleBookInfo() {
         Book book = bookRepository.findAll().stream().findFirst().orElseThrow(null);
         BookInfoDto bookInfoDto = new BookInfoDto();
-//        String datetest=String.valueOf(book.getAuthor().getBirth_date()) ;
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" yyyy", Locale.ENGLISH);
-//        LocalDate dateTime = LocalDate.parse(datetest, formatter);
+
 
         bookInfoDto.setISBN(book.getIsbn());
         bookInfoDto.setTitle(book.getTitle());
         bookInfoDto.setDescription(book.getDescr());
         bookInfoDto.setBookDate(book.getDate_creation());
         bookInfoDto.setAuthorEmail(book.getAuthor().getEmail());
-        bookInfoDto.setAuthorBirtDate(book.getAuthor().getBirth_date());
+        bookInfoDto.setAuthorBirthDate(book.getAuthor().getBirth_date());
         bookInfoDto.setAuthorFullname(book.getAuthor().getFirstname() + " " + book.getAuthor().getLastname());
         bookInfoDto.setPublisherName(book.getPublisher().getName());
         bookInfoDto.setPublisherAddress(book.getPublisher().getAddress());
-
 
         return bookInfoDto;
 
@@ -70,11 +62,9 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
-
 
     public String deleteBook(Integer isbn) {
         bookRepository.deleteById(isbn);
@@ -86,7 +76,6 @@ public class BookService {
         Book existinBook = bookRepository.findById(book.getIsbn()).orElse(null);
         existinBook.setIsbn(book.getIsbn());
         existinBook.setAuthor(book.getAuthor());
-        ;
         existinBook.setDescr(book.getDescr());
         existinBook.setDate_creation(book.getDate_creation());
         existinBook.setPublisher(book.getPublisher());
@@ -102,6 +91,5 @@ public class BookService {
     public List<Book> saveBooks(List<Book> books) {
         return bookRepository.saveAll(books);
     }
-
 
 }

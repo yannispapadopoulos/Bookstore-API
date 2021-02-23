@@ -1,6 +1,5 @@
 package com.example.restprojpersado.services;
 
-import com.example.restprojpersado.entities.Book;
 import com.example.restprojpersado.entities.Publisher;
 import com.example.restprojpersado.DAO.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;

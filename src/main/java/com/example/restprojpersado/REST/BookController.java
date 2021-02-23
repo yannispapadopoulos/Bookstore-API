@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import com.example.restprojpersado.services.BookService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/bookstore")
@@ -34,6 +30,7 @@ public class BookController {
 
     @GetMapping("/findOrderPublishedBooksByAuthor")
     public List<VisibleBooksOrderedByAuthorDto> findOrderPublishedBooksByAuthor() {
+
         try {
             List<VisibleBooksOrderedByAuthorDto> listVisibleBooksOrderedByAuthorDto = bookService.getOrderPublishedBooksByAuthor();
             if (listVisibleBooksOrderedByAuthorDto == null) {
@@ -60,7 +57,6 @@ public class BookController {
         } catch (Exception e) {
             throw new ApiRequestException(e.getMessage());
         }
-
 
     }
 
